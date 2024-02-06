@@ -1,0 +1,46 @@
+<?php
+return [
+    'request_for_fc9' => 'د ف س ۹ فورمې غوښتنه',
+    'fc9_number' => 'د ف س ۹ شمیره',
+    'request_directorate' => 'غوښتونکی ریاست',
+    'item_list' => 'د اجناسو نوملړ',
+    'requested_for' => 'غوښتنه دې کارمند لپاره',
+    'fc9_detail' => 'د ف س ۹ جزئیات',
+    'fc9_list' => 'د ف س ۹ نوملړ',
+    'created_by' => "ایجاد شوی ",
+    'fc9_view' => "د ف س ۹ کتل",
+    'fc9_edit' => "د ف س ۹ تصحیح",
+    "fc9" => "ف س ۹",
+
+    //print
+    'gov_name' => 'د افغانستان اسلامی امارت',
+    'number' => 'شمیره',
+    'date' => 'نیټه',
+    'dilevery_request' => 'د تحویلخانې درخواست',
+    'item_below_provide' => 'مهرباني وکړئ لاندې توکي چمتو کړئ',
+    'repair_order' => 'د جوړولو فرمایش',
+    'fc9_form' => 'فورمه ف س ( ۹ )',
+    'department' => 'ریاست',
+    'please_enter_fc9_number' => 'لطفا نمبر ف س 9 را وارد کنید!',
+    'request_rep' => '۳-درخواست کوونکي شعبې نوم',
+    'name_of_representative' => '۴ -  د نماینده گی نوم:',
+    'item_number' => 'د اجناسو شمېره',
+    'reserve_number' => 'د ذخیری شمیره',
+    'item_name' => 'نام جنس',
+    'item_details_services' => 'د جنس تفصیلات  - خدمات',
+    'amout' => 'اندازه',
+    'unit' => 'واحد',
+    'added_to_the_account' => 'معامله شو په حساب',
+    'Items_marked_not_available_buyers_should_request' => '۱۱-هغه اقلام چې په هغه خط کې لیکل شوي دي په تخویلخانه کې نشته، د هغه خریداري دې وشي',
+    'ticket_destribution_number' => '۱۲-د توزیع ټکټ شمیره',
+    'sub_director' => '۱۴-د تحویلخانې آمر',
+    'signature' => '۱۳-د صلاحیت لرونکي لاسلیک',
+    'Distribution_One_original_and_two_copies_are_combined' => 'توزیع - په یو اصل او دوه کاپیانو کې ترتیبیږي.',
+    'the_original_will_be_kept_at_the_delivery_house.' => 'الف: اصل یې په تحویلخانه کې ساتل کیږي.',
+    'sending_copy' => 'ب: اوله کاپي یې د خریداری په موخه د تخویلخانې له لوري د خدماتو مدیریت د تهیې شعبې ته لیږل کیږي.',
+    'second_copy' => 'ج: دوهمه کاپي یې درخواست کونکي یا د توزیع تیکیت ته ورکول کیږي.',
+    'fc9_text'=>':directorate به ( ) قلم جنس ذیل ضرورت دارد. لطف نموده اجناس متذکره را در وجه اسامی نامبرده، حواله نموده ممنون سازید. در صورت ضرورت به شماره های ذیل تماس حاصل نماید.',
+    'fc9_md'=>'د خدماتو ریاست محترم مقام ته!'
+]
+
+?>
