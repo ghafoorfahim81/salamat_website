@@ -58,6 +58,18 @@
                             </td>
                             <td scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                @{{record.price}}
+                            </td>
+                            <td scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                @{{record.stock_quantity}}
+                            </td>
+                            <td scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                @{{record.category}}
+                            </td>
+                            <td scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 @{{record.created_at}}
                             </td>
 
@@ -73,7 +85,6 @@
                     </template>
                 </datatable>
             </div>
-            @include('external_directorates.create-edit-modal')
         </div>
     </div>
 
@@ -90,30 +101,46 @@
                 return {
                     loading: false,
                     showLoading: false,
-                    url: '{{route("external-directorates.index")}}?',
+                    url: '{{route("product.index")}}?',
                     columns: [
                         {
-                            label: "@lang('general_words.number')",
+                            label: "@lang('lang.index')",
                             name: 'id',
+                            sort: false,
+                        },
+                        {
+                            label: "@lang('lang.name')",
+                            name: 'products.name',
+                            sort: false,
                             activeSort: true,
                             order_direction: 'desc',
                         },
                         {
-                            label: "@lang('setting.external_department')",
+                            label: "@lang('lang.price')",
+                            name: 'products.price',
                             sort: true,
-                            name: 'name',
+                            activeSort: true,
+                            order_direction: 'desc',
                         },
                         {
-                            label: "@lang('setting.created_at')",
+                            label: "stock_quantity",
+                            name: 'products.stock_quantity',
                             sort: true,
-                            name: 'created_at',
+                            activeSort: true,
+                            order_direction: 'desc',
                         },
-
                         {
-                            label: "@lang('general_words.action')",
+                            label: "@lang('lang.category')",
+                            name: 'products.category',
+                            sort: true,
+                            activeSort: true,
+                            order_direction: 'desc',
+                        },
+                        {
+                            label: "@lang('lang.actions')",
                             name: 'action',
-                        },
-
+                            sort: false
+                        }
                     ],
                     apiData: {},
                     appPerPage: '{!! perPage(1) !!}',
@@ -172,25 +199,6 @@
 
                 closeModal() {
                     this.isModalOpen = false;
-                },
-
-                saveRecord() {
-                    if (this.form.name && this.form.name != ' ') {
-                        this.save_directorate_loader = true;
-                        axios.post("{{route('external-directorates.store')}}", this.form).then((res) => {
-                            let response = res.data;
-                            if (response.status == 200) {
-                                this.save_directorate_loader = false;
-                                this.isModalOpen = false;
-                                showMessage(response.message, 'success');
-                                this.getRecord();
-                                this.resetForm();
-                            } else {
-                                this.save_directorate_loader = false;
-                                showMessage(response.message, 'warning');
-                            }
-                        });
-                    }
                 },
 
                 editRecord(id = null, index) {

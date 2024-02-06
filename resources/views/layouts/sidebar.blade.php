@@ -6,6 +6,8 @@
     </div>
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
+        {{(hasPermission(['product_list']))}}
+
         <ul class="space-y-2 font-medium">
             @if(hasPermission(['dashboard']))
                 <li>
@@ -16,15 +18,15 @@
                     </a>
                 </li>
             @endif
-            @if(hasPermission(['document_list']))
-                <li>
-                    <a href="{{route('documents.index')}}"
-                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                        <i class="material-icons text-gray-500 mr-1 dark:text-slate-400 dark:hover:text-white">folder</i>
-                        <span class="mr-2 dark:text-slate-400 dark:hover:text-white text-lg">{{__('sidebar.document')}}</span>
-                    </a>
-                </li>
-            @endif
+{{--            @if(hasPermission(['product_list']))--}}
+{{--                <li>--}}
+{{--                    <a href="{{route('documents.index')}}"--}}
+{{--                       class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">--}}
+{{--                        <i class="material-icons text-gray-500 mr-1 dark:text-slate-400 dark:hover:text-white">folder</i>--}}
+{{--                        <span class="mr-2 dark:text-slate-400 dark:hover:text-white text-lg">{{__('sidebar.document')}}</span>--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+{{--            @endif--}}
             <button type="button" id="settingsButton" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75
                 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
