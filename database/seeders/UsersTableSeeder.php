@@ -22,8 +22,6 @@ class UsersTableSeeder extends Seeder
             $user  = User::create([
                 'user_name'     => 'admin',
                 'email'    => 'admin@admin.com',
-                'directorate_id' => 63,
-                'employee_id' =>197,
                 'password' => bcrypt('password')
             ]);
             if($role && $user)

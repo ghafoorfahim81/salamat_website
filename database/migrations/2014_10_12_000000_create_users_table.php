@@ -21,8 +21,6 @@ return new class extends Migration
             $table->timestamp('first_login_at')->nullable();
             $table->string('password');
             $table->integer('status')->default(1);
-            $table->integer('employee_id');
-            $table->integer('directorate_id');
             $table->bigInteger('created_by');
             $table->bigInteger('updated_by')->nullable();
             $table->bigInteger('deleted_by')->nullable();

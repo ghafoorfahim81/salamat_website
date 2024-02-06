@@ -17,8 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('tracker_id');
             $table->text('body');
-            $table->foreign('tracker_id')->references('id')->on('trackers')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('parent_id')->references('id')->on('comments')->onDelete('cascade');
             $table->timestamps();
         });
