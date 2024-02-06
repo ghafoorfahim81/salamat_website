@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('permission_groups'))
-        Schema::create('permission_groups', function (Blueprint $table) {
+        Schema::create('post_categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->index();
-            $table->string('category')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_groups');
+        Schema::dropIfExists('post_categories');
     }
 };

@@ -6,51 +6,45 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-use Illuminate\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+
+use Illuminate\Pagination\Paginator;
+
+use App\Models\Psycho\Psychologist;
 use App\Traits\Uuids;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-
-
-
-
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
-//    use Uuids;
+    use HasFactory,
+        HasProfilePhoto,
+        Notifiable,
+        TwoFactorAuthenticatable,
+        HasApiTokens,
+        Uuids;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'user_name',
+        'id',
+        'name',
         'email',
         'password',
-        'status',
-        'position_id',
-        'employee_id',
-        'first_login_at',
-        'directorate_id'
+        'profile_photo_path',
+        'current_team_id',
+        'setting',
+        'companies',
+        'current_company',
+        'type',
+        'location_id',
+        'province_id'
     ];
-
-
-
+    protected $table = 'users';
+    protected $primayKey='id';
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -79,132 +73,112 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
-        'employee_id',
-        'directorate_id',
-        'first_login_at'
     ];
 
 
-
-    public function getEmployeeIdAttribute()
-    {
-        return $this->attributes['employee_id'];
-    }
-//    public function routeNotificationForDatabase()
-//    {
-//        return $this->id; // Adjust this based on your model's primary key or identifier
-//    }
-
     public function roles()
     {
-        return $this->hasMany(UserRole::class,
-             'user_id');
+        return $this->belongsToMany('App\Models\Role', 'user_roles', 'user_id', 'role_id');
     }
-    public function getDirectorateIdAttribute()
+
+    public function psychologist()
     {
-        return $this->attributes['directorate_id'];
-
+        return $this->hasOne(Psychologist::class);
     }
 
-    public function getFirstLoginAtAttribute()
+
+    /**
+     * userList function
+     *  get user list base on condition
+     *
+     * @param integer $start_page
+     * @param integer $per_page
+     * @param string $filter
+     * @return void
+     */
+    public function userList($request)
     {
-        // Your implementation here
-    }
-    // public function roles()
-    // {
-    //     return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
-
-    // }
-
-
-    public function directorate(): BelongsTo
-    {
-        $localeColumn = "name_" . app()->getLocale();
-        return $this->belongsTo(Directorate::class, 'directorate_id')->select(['id', $localeColumn . ' as name']);
-    }
-
-
-    public function employee():BelongsTo {
-        return $this->belongsTo(Employee::class, 'employee_id');
-    }
-
-
-
-    public function getUsers($request){
-
-       $filter = $request->input('search_keyword');
+        $filter = $request->input('search_keyword');
         $per_page = $request->input('per_page') ? $request->input('per_page') : 10;
         $start_page = $request->input('current_page');
         $order_by = $request->input('order_by');
         $order_direction = $request->input('order_direction');
-        $query = DB::table('users')
-            ->leftJoin('directorates','directorates.id','users.directorate_id')
-            ->leftjoin('employees as employee', 'employee.id','users.employee_id')
-            ->selectRaw('users.*,directorates.name_ps as directorate_name,
-            directorates.name_'.lang().' as directorate,
-            employee.name as employee_name,
-                IF(users.status = 1, "' . __('general_words.active') . '", "' . __('general_words.deactivate') . '") as status
-            ')->whereNull('users.deleted_at');
+
+        $query = $this->leftjoin('user_roles', 'user_roles.user_id', 'users.id')
+            ->leftjoin('roles', 'roles.id', 'user_roles.role_id')
+            ->selectRaw("users.*,
+        GROUP_CONCAT(roles.name) AS role_name")
+            ->groupBy('users.id');
+
+
+        if ($filter && $filter != '') {
+            $query = $query->where(function ($where) use ($filter) {
+                $where->where('users.name', 'like', '%' . $filter . '%')
+                    ->orWhere('users.email', 'like', '%' . $filter . '%')
+                    ->orWhere('roles.name', 'like', '%' . $filter . '%');
+            });
+        }
 
         if ($order_direction != '' || $order_by != '') {
             $query = $query->orderBy($order_by, $order_direction);
         }
-         if ($filter != '') {
-            $query = $query
-                ->where('users.user_name', 'like', '%' . $filter . '%')
-                ->orwhere('users.email', 'like', '%' . $filter . '%');
-         }
-        Paginator::currentPageResolver(function () use ($start_page) {
-            return $start_page;
-        });
-        $query = $query->paginate($per_page);
-        return $query;
-    }
-    public function userDetail($id = 0)
-    {
-        if ($id) {
-            return $this->leftjoin('user_roles', 'user_roles.user_id', 'users.id')
-                ->leftjoin('roles', 'roles.id', 'user_roles.role_id')
-                ->selectRaw('users.*,
-            GROUP_CONCAT(roles.id) AS role_id,
-            GROUP_CONCAT(roles.name_'.lang().') AS role')
-                ->where('users.id', $id)
-                ->first();
-        }
-    }
 
-    public function users($request){
-        $filter           = $request->input('search_keyword');
-        $per_page         = $request->input('per_page') ? $request->input('per_page') : 10;
-        $start_page       = $request->input('current_page');
-        $order_by         = $request->input('order_by');
-        $order_direction  = $request->input('order_direction');
-        $name             = $request->user_name;
-        $email            = $request->email;
-        $query = DB::table('users')
-            ->selectRaw('users.*,
-        IF(users.status = 1, "' . __('general_words.active') . '", "' . __('general_words.deactivate') . '") as status
-            ');
-        if ($order_direction != '' || $order_by != '') {
-            $query = $query->orderBy($order_by, $order_direction);
-        }
-        if ($filter != '') {
-            $query = $query
-                ->where('users.user_name', 'like', '%' . $filter . '%')
-                ->orwhere('users.email', 'like', '%' . $filter . '%');
-        }
-        if ($name != 'null') {
-            $query = $query->where('users.user_name', 'like', '%' . $name . '%');
-        }
-        if ($email != 'null') {
-            $query = $query->where('users.email', 'like', '%' . $email . '%');
-        }
+
         Paginator::currentPageResolver(function () use ($start_page) {
             return $start_page;
         });
 
         return $query->paginate($per_page);
     }
+
+    /**
+     * userDetail function
+     * get user detail by id
+     * @param int $id
+     * @return void
+     */
+    public function userDetail($id = 0)
+    {
+        if ($id) {
+
+            return $this->leftjoin('user_roles', 'user_roles.user_id', 'users.id')
+                ->leftjoin('roles', 'roles.id', 'user_roles.role_id')
+                ->selectRaw('users.*,
+            GROUP_CONCAT(roles.id) AS role_id,
+            GROUP_CONCAT(roles.name) AS role')
+                ->where('users.id', $id)
+                ->first();
+        }
+    }
+
+
+    /**
+     * userDetail function
+     * get user detail by id
+     * @param int $id
+     * @return void
+     */
+    public function userRoles($id)
+    {
+        return $this->leftjoin('user_roles', 'user_roles.user_id', 'users.id')
+            ->leftjoin('roles', 'roles.id', 'user_roles.role_id')
+            ->selectRaw("roles.id AS id,roles.name as name")
+            ->where('users.id', $id)->get();
+    }
+
+
+    // get user permissions
+    public function userPermissions($userid)
+    {
+        return $this->join('user_roles', 'user_roles.user_id', 'users.id')
+            ->join('roles', 'roles.id', 'user_roles.role_id')
+            ->leftjoin('role_permissions', 'role_permissions.role_id', 'roles.id')
+            ->leftjoin('permissions', 'permissions.id', 'role_permissions.permission_id')
+            ->selectRaw("permissions.name")
+            ->where('users.id', $userid)->get();
+    }
+
+    // get user permissions based on permission
     public function userPermissionsCheck($userid, $permissions = array(), $booleanResult = true)
     {
         $flag = true;
@@ -248,8 +222,8 @@ class User extends Authenticatable
             'permissions' => $intersected_permission
         ];
     }
-    // get user permission
 
+    // get user permission
     public function getUserPermission($userId, $permissions = array())
     {
         $query = $this->join('user_roles', 'user_roles.user_id', 'users.id')
@@ -264,12 +238,4 @@ class User extends Authenticatable
 
         return $query->get();
     }
-    // public function roles():HasMany {
-    //     return $this->hasMany(UserRole::class);
-
-
-    // }
-
-
-
 }

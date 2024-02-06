@@ -16,62 +16,9 @@ trait PermissionTrait
     public function seedAndCheckPermission()
     {
 
-        // dashboard management
-
-        $g = (new PermissionGroup())->where('name', 'dashboard')->first();
-        if (!$g) {
-            $g = PermissionGroup::create([
-                'name' => 'dashboard',
-                'category' => 'admin',
-            ]);
-        }
-        //  permission  table
-        $permissions = [
-            [
-                'name' => 'dashboard',
-            ]
-        ];
-        foreach ($permissions as $key => $value) {
-            $p = (new Permission())->where('name', $value['name'])->first();
-            if (!$p) {
-                $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
-            }
-        }
-
-//         report management
-
-        $g = (new PermissionGroup())->where('name', 'report')->first();
-        if (!$g) {
-            $g = PermissionGroup::create([
-                'name' => 'report',
-                'category' => 'admin',
-            ]);
-        }
-        //  permission  table
-        $permissions = [
-            [
-                'name' => 'report',
-            ]
-        ];
-//        foreach ($permissions as $key => $value) {
-//            $p = (new Permission())->where('name', $value)->first();
-//            if (!$p) {
-//                $p = Permission::create($value);
-//                $g->permissions()->sync($p->id, false);
-//            }
-//        }
-        foreach ($permissions as $key => $value) {
-            $p = (new Permission())->where('name', $value)->first();
-            if (!$p) {
-                $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
-
-            }
-        }
-
         // start user management
 
+        //  permission group table
         $g = (new PermissionGroup())->where('name', 'user')->first();
         if (!$g) {
             $g = PermissionGroup::create([
@@ -96,19 +43,18 @@ trait PermissionTrait
             [
                 'name' => 'user_delete'
             ],
-
-
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
         //end
-        //   role permission seeder
+        //  permission group table
 
         $g = (new PermissionGroup())->where('name', 'role')->first();
         if (!$g) {
@@ -134,278 +80,273 @@ trait PermissionTrait
             [
                 'name' => 'role_delete'
             ],
-
-
-
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
-        //end Role
+        // project Role
 
-
-        //   Document permission seeder
-
-        $g = (new PermissionGroup())->where('name', 'document')->first();
+        $g = (new PermissionGroup())->where('name', 'project')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'document',
+                'name' => 'product',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'document_list'
+                'name' => 'product_list'
             ],
             [
-                'name' => 'document_create'
+                'name' => 'product_create'
             ],
             [
-                'name' => 'document_edit'
+                'name' => 'product_edit'
             ],
             [
-                'name' => 'document_view'
+                'name' => 'product_view'
             ],
             [
-                'name' => 'document_delete'
+                'name' => 'product_delete'
             ],
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
-        //end Document
-
-
-        //   Tracker permission seeder
-
-        $g = (new PermissionGroup())->where('name', 'tracker')->first();
+        // Order permission
+        $g = (new PermissionGroup())->where('name', 'order')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'tracker',
+                'name' => 'about Us',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'tracker_list'
+                'name' => 'about_us_list'
             ],
             [
-                'name' => 'tracker_create'
+                'name' => 'about_us_create'
             ],
             [
-                'name' => 'tracker_edit'
+                'name' => 'about_us_edit'
             ],
             [
-                'name' => 'tracker_view'
+                'name' => 'about_us_view'
             ],
             [
-                'name' => 'tracker_delete'
+                'name' => 'about_us_delete'
             ],
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
-
-        //end Tracker
-        //   Deadline type permission seeder
-
-        $g = (new PermissionGroup())->where('name', 'document_status')->first();
+        // invoice permission
+        $g = (new PermissionGroup())->where('name', 'invoice')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'document_status',
+                'name' => 'contact Us',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'document_status_list'
+                'name' => 'contact_us_list'
             ],
             [
-                'name' => 'document_status_create'
+                'name' => 'contact_us_create'
             ],
             [
-                'name' => 'document_status_edit'
+                'name' => 'contact_us_edit'
             ],
             [
-                'name' => 'document_status_view'
+                'name' => 'contact_us_view'
             ],
             [
-                'name' => 'document_status_delete'
+                'name' => 'contact_us_delete'
             ],
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
+        //end
 
-        //end Deadline type
-        //   Tracker permission seeder
+        // end user management
 
-        $g = (new PermissionGroup())->where('name', 'document_type')->first();
+        //end
+
+
+        //receipt
+
+        $g = (new PermissionGroup())->where('name', 'receipt')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'document_type',
+                'name' => 'comment',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'document_type_list'
+                'name' => 'comment_list'
             ],
             [
-                'name' => 'document_type_create'
+                'name' => 'comment_create'
             ],
             [
-                'name' => 'document_type_edit'
+                'name' => 'comment_edit'
             ],
             [
-                'name' => 'document_type_view'
+                'name' => 'comment_view'
             ],
             [
-                'name' => 'document_type_delete'
+                'name' => 'comment_delete'
             ],
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
+        //end receipt
+        //payment
 
-        //end Tracker
-        //   Tracker permission seeder
-
-        $g = (new PermissionGroup())->where('name', 'followup_type')->first();
+        $g = (new PermissionGroup())->where('name', 'payment')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'followup_type',
+                'name' => 'blog',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'followup_type_list'
+                'name' => 'blog_list'
             ],
             [
-                'name' => 'followup_type_create'
+                'name' => 'blog_create'
             ],
             [
-                'name' => 'followup_type_edit'
+                'name' => 'blog_edit'
             ],
             [
-                'name' => 'followup_type_view'
+                'name' => 'blog_view'
             ],
             [
-                'name' => 'followup_type_delete'
+                'name' => 'blog_delete'
             ],
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
-//        External Directorate
-        $g = (new PermissionGroup())->where('name', 'external_directorate')->first();
+        //end payment
+
+        $g = (new PermissionGroup())->where('name', 'category')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'external_directorate',
+                'name' => 'category',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'external_directorate_list'
+                'name' => 'category_list'
             ],
             [
-                'name' => 'external_directorate_create'
+                'name' => 'category_create'
             ],
             [
-                'name' => 'external_directorate_edit'
+                'name' => 'category_edit'
             ],
             [
-                'name' => 'external_directorate_view'
+                'name' => 'category_view'
             ],
             [
-                'name' => 'external_directorate_delete'
+                'name' => 'category_delete'
             ],
+            [
+                'name' => 'category_report'
+            ]
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
+        //end category
 
-        //end Tracker
-        //   Security level permission seeder
 
-        $g = (new PermissionGroup())->where('name', 'security_level')->first();
+        //dashboard
+        $g = (new PermissionGroup())->where('name', 'dashboard')->first();
         if (!$g) {
             $g = PermissionGroup::create([
-                'name' => 'security_level',
+                'name' => 'dashboard',
                 'category' => 'admin',
             ]);
         }
         //  permission  table
         $permissions = [
             [
-                'name' => 'security_level_list'
+                'name' => 'dashboard_show'
             ],
             [
-                'name' => 'security_level_create'
+                'name' => 'organization_dashboard',
             ],
             [
-                'name' => 'security_level_edit'
-            ],
-            [
-                'name' => 'security_level_view'
-            ],
-            [
-                'name' => 'security_level_delete'
+                'name' => 'admin_dashboard',
             ],
         ];
         foreach ($permissions as $key => $value) {
             $p = (new Permission())->where('name', $value)->first();
             if (!$p) {
                 $p = Permission::create($value);
-                $g->permissions()->sync($p->id, false);
+                // $g->permissions()->sync($p->id, false);
+                $g->permissions()->attach($p->id, ['id' => Str::uuid()->toString()]);
 
             }
         }
-        //end security level
-
 
     }
 }

@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('permission_groups'))
-        Schema::create('permission_groups', function (Blueprint $table) {
+        Schema::create('post_post_categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->index();
-            $table->string('category')->nullable();
+            $table->uuid('post_id');
+            $table->uuid('category_id');
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_groups');
+        Schema::dropIfExists('post_post_categories');
     }
 };

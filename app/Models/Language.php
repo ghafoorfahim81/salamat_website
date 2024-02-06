@@ -5,7 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Language extends Model
 {
-    use HasFactory;
+    use HasFactory,Uuids;
+    protected $fillable = [
+        'name','code'
+    ];
 }

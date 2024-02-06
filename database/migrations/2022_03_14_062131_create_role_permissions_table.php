@@ -15,13 +15,12 @@ return new class extends Migration
     {
         if(!Schema::hasTable('role_permissions'))
         Schema::create('role_permissions', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('role_id')->unsigned();
-            $table->foreign('role_id')->references('id')->on('roles');
-            $table->bigInteger('permission_id')->unsigned();
-            $table->foreign('permission_id')->references('id')->on('permissions');
+            $table->uuid('id')->primary();;
+            // $table->uuid('role_id')->index();
+            $table->foreignUuid('role_id')->references('id')->on('roles');
+            // $table->uuid('permission_id')->index();
+            $table->foreignUuid('permission_id')->references('id')->on('permissions');
             $table->timestamps();
-
         });
     }
 

@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         if(!Schema::hasTable('user_roles'))
-            Schema::create('user_roles', function (Blueprint $table) {
-                $table->id();
-                $table->bigInteger('user_id')->unsigned();
-                $table->foreign('user_id')->references('id')->on('users');
-                $table->bigInteger('role_id')->unsigned();
-                $table->foreign('role_id')->references('id')->on('roles');
-                $table->timestamps();
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            // $table->uuid('user_id')->index();
+            $table->foreignUuid('user_id')->references('id')->on('users');
+            // $table->uuid('role_id')->index();
+            $table->foreignUuid('role_id')->references('id')->on('roles');
+            $table->timestamps();
         });
     }
 

@@ -14,13 +14,14 @@ return new class extends Migration
     public function up()
     {
         if(!Schema::hasTable('permission_permission_groups'))
-            Schema::create('permission_permission_groups', function (Blueprint $table) {
-                $table->id();
-                $table->bigInteger('permission_id')->unsigned();
-                $table->foreign('permission_id')->references('id')->on('permissions');
-                $table->bigInteger('permission_group_id')->unsigned();
-                $table->foreign('permission_group_id')->references('id')->on('permission_groups');
-                $table->timestamps();
+        Schema::create('permission_permission_groups', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            // $table->uuid('permission_id')->uuid();
+            $table->foreignUuid('permission_id')->references('id')->on('permissions');
+            // $table->uuid('permission_group_id')->uuid();
+            $table->foreignUuid('permission_group_id')->references('id')->on('permission_groups');
+           
+            $table->timestamps();
         });
     }
 

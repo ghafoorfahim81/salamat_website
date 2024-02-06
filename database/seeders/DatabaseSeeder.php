@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
+use App\Models\Client\Client;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,11 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-                PermissionsTableSeeder::class,
-                RolesTableSeeder::class,
-                UsersTableSeeder::class,
-            ]
-        );
+        // Client::factory(10)->create();
+        $this->call(PermissionsTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
+
     }
 }

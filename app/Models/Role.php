@@ -3,32 +3,17 @@
 namespace App\Models;
 
 use App\Traits\Uuids;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Illuminate\Pagination\Paginator;
 
 class Role extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Uuids;
 
-    protected $dates = ['deleted_at'];
     protected $guarded = [];
-    protected $table="roles";
-    protected $fillable = [
-        'name','slug','description'
-    ];
 
-    protected function createdAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => miladiToHijriOrJalali($value),
-            set: fn ($value) => strpos($value, '-') ? $value : dateToMiladi($value),
-        );
-    }
     public function users()
     {
         return $this->belongsToMany('App\Models\User',
@@ -50,35 +35,24 @@ class Role extends Model
      * @param string $filter
      * @return void
      */
-
-    public function roles($request)
+    public function roleList($request)
     {
-        // return $request;
         $filter = $request->input('search_keyword');
         $per_page = $request->input('per_page') ? $request->input('per_page') : 10;
         $start_page = $request->input('current_page');
         $order_by = $request->input('order_by');
         $order_direction = $request->input('order_direction');
-        $name   = $request->name;
-        // $email         = $request->email;
-        $directorate_id       = $request->directorate_id;
-        // $query = $this->select('roles.*','roles.name_'.lang().' as name');
-        $query = $this->selectRaw('roles.*');
-        if ($filter != '') {
-            $query = $query->where('roles.name', 'like', '%' . $filter . '%');
-        }
-        // if ($name != 'null') {
-        //     $query = $query->where('roles.name', 'like', '%' . $name . '%');
-        //             ->orWhere('roles.name', 'like', '%' . $name . '%')
-        //             ->orWhere('roles.name_ps', 'like', '%' . $name . '%');
 
-        // }
-        // if ($email != 'null') {
-        //         $query = $query->where('roles.email', 'like', '%' . $email . '%');
-        //     }
-        if ($directorate_id != 'null') {
-            $query = $query->where('roles.directorate_id', $directorate_id);
+        $query = $this->selectRaw('roles.*')->where('name','!=','abar tarnegar');
+        if ($filter && $filter != '') {
+
+            $query = $query->where(function ($where) use ($filter) {
+                $where->where('roles.name', 'like', '%' . $filter . '%')
+                    ->orWhere('roles.description', 'like', '%' . $filter . '%');
+            });
+            // abar tarnegar
         }
+
         if ($order_direction != '' || $order_by != '') {
             $query = $query->orderBy($order_by, $order_direction);
         }
@@ -96,25 +70,12 @@ class Role extends Model
     {
         $userRole = $this->join('user_roles', 'user_roles.role_id', 'roles.id')
             ->where('roles.id', $id)
+            ->where('roles.name','!=','abar tarnegar')
             ->first();
 
         if ($userRole) {
             return false;
         }
         return true;
-    }
-
-
-    public function getRoles($keyword=null,$role_id=null)
-    {
-        $query   = $this->selectRaw('name_'.lang().' as name, id');
-        if($keyword){
-            $query->where('name_'.lang(),'like', '%' . $keyword . '%');
-        }
-        if($role_id)
-        {
-            return $query->where('roles.id',$role_id)->first();
-        }
-        return $query->limit(10)->get();
     }
 }

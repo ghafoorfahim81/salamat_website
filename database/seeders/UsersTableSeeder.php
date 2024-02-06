@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $role =(new Role())->where('slug','admin')->first();
+        $role =(new Role())->where('slug','super-admin')->first();
         $user =(new User())->where('user_name','admin')->first();
 
         if(!$user)
